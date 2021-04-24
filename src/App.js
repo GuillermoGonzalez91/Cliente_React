@@ -1,6 +1,4 @@
 import React, {Fragment, useState, useEffect} from 'react';
-import Deposits from './Components/Deposits'
-import Egress from './Components/Egress'
 import CustomPaginationActionsTable from './Components/List'
 import Form from  './Components/FormPrimary'
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +10,8 @@ import PrimarySearchAppBar from './Components/Navbar'
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import Chart from './Components/Chart'
+import CardResume from './Components/CardResume';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -111,13 +111,13 @@ function App() {
               {/* Recent Deposits  */}
               <Grid item xs={6} md={6} lg={6}>
                 <Paper className={fixedHeightPaper}>
-                  <Deposits transactions={transactions} />
+                <CardResume tipe = {'GASTOS TOTALES'} transactions={transactions} />
                 </Paper>
               </Grid>
               {/* Recent Expenses */}
               <Grid item xs={6} md={6} lg={6}>
                 <Paper className={fixedHeightPaper}>
-                  <Egress transactions={transactions} />
+                  <CardResume tipe = {'INGRESOS TOTALES'} transactions={transactions} />
                 </Paper>
               </Grid>
             </Grid>
