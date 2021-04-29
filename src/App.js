@@ -20,7 +20,8 @@ paper: {
   display: 'flex',
   overflow: 'auto',
   flexDirection: 'column',
-  borderRadius: theme.spacing(2)
+  borderRadius: theme.spacing(4),
+  alignItems : 'center'
 
 },
 cuadrado :{
@@ -50,6 +51,7 @@ fixedHeight: {
 },
 appBarSpacer: theme.mixins.toolbar,
 content: {
+  
   height: '100vh',
   overflow: 'auto',
   backgroundColor: "#ffffff"
@@ -60,19 +62,18 @@ container: {
 
 },
 buttons: {
-  paddingTop: theme.spacing(1),
+  paddingTop: theme.spacing(5),
   paddingBottom: theme.spacing(5),
-  aling : 'center',
-
+  borderRadius: theme.spacing(11),
 }, 
 buttons2: {
+  borderRadius: theme.spacing(11),
   height:theme.spacing(15), 
 }
 
 }));
 
 function App() {
-
   const [transaction, setTransaction] = useState({
     concepto: '',
     monto: 0,
@@ -82,13 +83,33 @@ function App() {
 
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-
-
   const [transactions, setTransactions] = useState([])
   const [listUpdated, setListUpdated] = useState(false)
-  const [mostrar,setMostrar] = useState(true);
+  const [pos,setPos] = useState();
 
+  function getContent(pos) {
+    switch (pos) {
+      case 0:
+        return(
+          <Fragment>
+            <Chart transaction={transaction} setTransaction={setTransaction} transactions={transactions} setListUpdated={setListUpdated} />
+          </Fragment>
+        )
+      case 1:
+       return(
+         <Grid  className={classes.paper2}>
+                  <Form transaction={transaction} setTransaction={setTransaction} setListUpdated={setListUpdated} />
+         </Grid>
+       )
+       default: 
+       return(<Grid item xs={12}>
+          <Paper className={classes.paper2} >
+            <CustomPaginationActionsTable transaction={transaction} setTransaction={setTransaction} transactions={transactions} setListUpdated={setListUpdated} />
+          </Paper>
+        </Grid>)
+        } 
+  }
+  
   useEffect(() => {
     const getTransactios = () => {
       fetch('http://localhost:9000/api')
@@ -100,24 +121,25 @@ function App() {
   }, [listUpdated]
   )
  
+
   return (
     <div>
       <main className={classes.content}>
       <PrimarySearchAppBar/>
         <div className={classes.appBarSpacer} />
         <div className={classes.backgroundColor}>
-          <Container maxWidth="lg" className={classes.container}>
+          <Container>
             <Grid container spacing={10}>
               {/* Recent Deposits  */}
-              <Grid item xs={6} md={6} lg={6}>
+              <Grid item xs={12} md={6} lg={6}>
                 <Paper className={fixedHeightPaper}>
-                <CardResume tipe = {'GASTOS TOTALES'} transactions={transactions} />
+                <CardResume type = {'GASTOS TOTALES'} transactions={transactions} />
                 </Paper>
               </Grid>
               {/* Recent Expenses */}
-              <Grid item xs={6} md={6} lg={6}>
+              <Grid item xs={12} md={6} lg={6}>
                 <Paper className={fixedHeightPaper}>
-                  <CardResume tipe = {'INGRESOS TOTALES'} transactions={transactions} />
+                  <CardResume type = {'INGRESOS TOTALES'} transactions={transactions} />
                 </Paper>
               </Grid>
             </Grid>
@@ -126,22 +148,13 @@ function App() {
         <div className={classes.buttons}>
           <Fragment>
             <ButtonGroup outlined = "none"color = "primary" fullWidth disableElevation variant="contained" className={classes.buttons2}>
-              <Button disableRipple  = "none" onClick={() => { setMostrar(true) }}>Grafico</Button>
-              <Button outlined = "none" onClick={() => { setMostrar(false) }}>Ingresar Movimientos</Button>
-              <Button outlined = "none" onClick={() => { setMostrar(false) }}>Listado</Button>
+              <Button outlined  = "none" onClick={() => { setPos(2)}}>Listado</Button>
+              <Button outlined  = "none" onClick={() => { setPos(0)}}>Grafico</Button>
+              <Button outlined  = "none" onClick={() => { setPos(1)}}>Ingresar Movimientos</Button>
             </ButtonGroup>
           </Fragment>
         </div>
-  {mostrar
-        ?
-        <Form transaction={transaction} setTransaction={setTransaction} setListUpdated={setListUpdated} />
-        :<Chart transaction={transaction} setTransaction={setTransaction} transactions={transactions} setListUpdated={setListUpdated} />
-      }
-        <Grid item xs={12}>
-          <Paper className={classes.paper2} >
-            <CustomPaginationActionsTable transaction={transaction} setTransaction={setTransaction} transactions={transactions} setListUpdated={setListUpdated} />
-          </Paper>
-        </Grid>
+            {getContent(pos)} 
       </main>
     </div>
   );

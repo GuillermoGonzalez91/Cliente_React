@@ -1,54 +1,55 @@
-import React from 'react';
+import React, {Fragment, useState} from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { AccessibilityNew } from '@material-ui/icons';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 
 
 
-// Generate Sales Data
-function createData(time, amount) {
-  return { time, amount };
-}
+const useStyles = makeStyles((theme) => ({
+  buttons2: {
+  justifyContent : 'auto'
+  }
+  }));
+//transaction, transactions ,setTransaction, setListUpdated
+export default function Chart(props) {
 
-const data = [
-  createData('12/12', 33),
-  createData('13/12', 11),
-  createData('14/12', 33),
-  createData('15/12', 44),
-  createData('16/12', 55),
-  createData('17/12', 11),
-  createData('18/12', 22),
-  createData('19/12', 99),
-  createData('20/12', undefined),
-];
+  const [pos,setPos] = useState();
 
-
-
-
-
-
-
-export default function Chart({transaction, transactions ,setTransaction, setListUpdated}) {
+  const classes = useStyles();
   const theme = useTheme();
+  const a = props.transactions
 
-let{concepto, monto, fecha, tipo} = transaction
-
-
-
+  
+  const a2=a.filter(x => x.Tipo === "Ingreso" )
+  const a1=a.filter(x => x.Tipo === "Egreso" )
+  console.log(a1)
+  console.log(a2)
   return (
-
-
-    
     <React.Fragment>
+      <Grid container
+        direction="row"
+        justify="center"
+        alignItems="center">
+        <ButtonGroup classNeme={classes.buttons} disableElevation variant="contained" color="primary">
+          <Button onClick={() => {setPos(1)}}>Ingresos</Button>
+          <Button onClick={() => {setPos(2)}}>Gastos</Button>
+        </ButtonGroup>
+      </Grid>
+     
       <ResponsiveContainer>
+      { pos === 1 ?  
         <LineChart
-          data={transactions}
+          data = {a1}      
           margin={{
-            top: 16,
-            right: 150,
-            bottom: 400,
-            left: 150,
-            
+            top: 15,
+            right: 200,
+            bottom: 200,
+            left: 50,
           }}
         >
           <XAxis dataKey="Fecha" stroke={theme.palette.text.secondary} />
@@ -58,12 +59,35 @@ let{concepto, monto, fecha, tipo} = transaction
               position="left"
               style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
             >
-              Gastos ($)
+              INGRESOS
             </Label>
           </YAxis>
-          <Line type="monotone" dataKey="Monto" stroke="#008f39" dot={false} />
-          <Line type="monotone" dataKey="Monto" stroke="#ff1100" dot={false} />
+          <Line type="monotone" dataKey="Monto" stroke="#008f39" dot={false} /> 
         </LineChart>
+         :  
+        <LineChart
+          data = {a2}      
+          margin={{
+            top: 15,
+            right: 200,
+            bottom: 200,
+            left: 50,
+          }}
+        >
+          <XAxis dataKey="Fecha" stroke={theme.palette.text.secondary} />
+          <YAxis stroke={theme.palette.text.secondary}>
+            <Label
+              angle={270}
+              position="left"
+              style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
+            >
+              GASTOS
+            </Label>
+          </YAxis>
+          <Line type="monotone" dataKey="Monto" stroke="#ff1100" dot={false} />
+
+        </LineChart>
+        }
       </ResponsiveContainer>
     </React.Fragment>
   );

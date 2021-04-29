@@ -13,8 +13,8 @@ export default function CardResume(props) {
   const classes = useStyles();
   var value;
 
-    function showTransation(tipe) {
-        if (tipe === "INGRESOS TOTALES") {
+    function showTransation(type) {
+        if (type === "INGRESOS TOTALES") {
              var TotalTransaction = props.transactions.reduce((sum, value) => (typeof value.Monto == "number" && value.Tipo !== "Egreso" ? sum + value.Monto : sum), 0);
             console.log(TotalTransaction);
         }
@@ -24,15 +24,17 @@ export default function CardResume(props) {
         }
         return(TotalTransaction)
     }
-    value = showTransation(props.tipe)
+
+    
+    value = showTransation(props.type)
 
     return (
         <React.Fragment>
             <Typography component="p" variant="h6" aling="center" color="primary" className={classes.depositContext}>
-                {props.tipe}
+                {props.type}
             </Typography>
-            <Typography component="p" variant="h4" aling="center" color="primary" className={classes.depositContext}>
-                {props.tipe === "INGRESOS TOTALES" ? <ArrowUpwardIcon htmlColor='green' fontSize='large' /> :
+            <Typography component="p" variant="h4" aling='center' color="primary" className={classes.depositContext}>
+                {props.type === "INGRESOS TOTALES" ? <ArrowUpwardIcon htmlColor='green' fontSize='large' /> :
                     <ArrowDownwardIcon htmlColor='red' fontSize='large' />}
             ${value}
             </Typography>

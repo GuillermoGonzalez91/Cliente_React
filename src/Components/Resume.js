@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Resume({transaction}) {
   const classes = useStyles();
 
+
+
+
   return (
     <React.Fragment>
       <Typography component="h1" variant="h4" align="center">

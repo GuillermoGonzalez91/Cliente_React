@@ -13,6 +13,9 @@ import Resume from './Resume';
 
 
 
+
+
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
@@ -83,6 +86,7 @@ export default function Checkout({transaction, setTransaction, setListUpdated}) 
 setActivate();
 }
 
+//REEMPAZAR POR UN IF 
     function getStepContent(step, transaction, setTransaction) {
         switch (step) {
           case 0:
@@ -145,10 +149,8 @@ const setActivate = () => {
                     onClick={handleSubmit}
                     className={classes.button}
                   >
-                       Back
-                       
-                  </Button>
-                 
+                       Back           
+                  </Button>      
                </React.Fragment>
                
             ) : (
@@ -164,7 +166,6 @@ const setActivate = () => {
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
-                    
                     className={classes.button}
                   >
                     {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
