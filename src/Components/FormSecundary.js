@@ -10,8 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default function AddressForm({transaction, setTransaction}) {
 
-
-
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
@@ -30,11 +28,12 @@ export default function AddressForm({transaction, setTransaction}) {
     })};
 
 
+
 let{concepto, monto, fecha, tipo} = transaction
     
-return (
+  return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6"  align="center">
     Cargar datos
       </Typography>
       <Grid container spacing={3}>

@@ -1,18 +1,15 @@
-import React from 'react';
-import {useState} from 'react';
+import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import FormSecundary from './FormSecundary';
-import Resume from './Resume';
-
-
-
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 
 
 
@@ -22,22 +19,22 @@ const useStyles = makeStyles((theme) => ({
   },
   layout: {
     width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
+    [theme.breakpoints.up(600 + theme.spacing(4) * 4)]: {
+      width: 700,
       marginLeft: 'auto',
       marginRight: 'auto',
     },
   },
   paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
+    padding: theme.spacing(4),
+    [theme.breakpoints.up(600 + theme.spacing(4) * 3)]: {
+      marginTop: theme.spacing(7),
+      marginBottom: theme.spacing(7),
+      padding: theme.spacing(4),
     },
   },
   stepper: {
@@ -49,131 +46,110 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
 }));
-const steps = ['Ingresar Transaccion', 'Datos'];
 
-
-
-
-
-
-export default function Checkout({transaction, setTransaction, setListUpdated}) {
-
+export default function FormTransaction({ transaction, setTransaction, setListUpdated }) {
 
   const handleSubmit = () => {
-
     //consulta
     const requestInit = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(transaction)
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(transaction)
     }
     fetch('http://localhost:9000/api', requestInit)
-    .then(res => res.text())
-    .then(res => console.log(res))
+      .then(res => res.text())
+      .then(res => console.log(res))
 
     //reiniciando state de la transaccion
     setTransaction({
-        concepto: '',
-        monto: 0,
-        fecha: Date,
-        tipo:''
+      concepto: '',
+      monto: 0,
+      fecha: Date,
+      tipo: ''
     })
-    
+
     setListUpdated(true);
-setActivate();
-}
+  }
 
-//REEMPAZAR POR UN IF 
-    function getStepContent(step, transaction, setTransaction) {
-        switch (step) {
-          case 0:
-            return <FormSecundary transaction={transaction} setTransaction = {setTransaction}/>;
-          case 1:
-            return <Resume transaction={transaction}/>;
-          default:
-            throw new Error('Unknown step');
-        }
-      }
-      
+
+  const handleChange = e => {
+    setTransaction({
+      ...transaction,
+      [e.target.name]: e.target.value
+    })
+  };
+
+  let { concepto, monto, fecha, tipo } = transaction
+
   const classes = useStyles()
-  const [activeStep, setActiveStep] = useState(0); 
-
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
-
-const setActivate = () => {
-    setActiveStep(0);
-  };
-
- 
-
-
   return (
     <React.Fragment>
       <CssBaseline />
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
-          FORM
+            FORM
           </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField onChange={handleChange}
+                required
+                id="conncepto"
+                name="concepto"
+                label="Ingresar el conceptp"
+                value={concepto}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField onChange={handleChange}
+                required
+                id="monto"
+                name="monto"
+                label="Ingresar el monto"
+                value={monto}
 
-          <Stepper activeStep={activeStep} className={classes.stepper}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-
-
-          <React.Fragment>
-            {activeStep === steps.length ? (
-                 <React.Fragment>
-                 <Typography variant="h6" gutterBottom>
-                   Thank you for your order.
-                 </Typography>
-                 <Typography variant="subtitle1">
-                  Mensaje de confirmacion!!
-                 </Typography>
-                 <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    className={classes.button}
-                  >
-                       Back           
-                  </Button>      
-               </React.Fragment>
-               
-            ) : (
-              <React.Fragment>
-                {getStepContent(activeStep,transaction,setTransaction)}
-                <div className={classes.buttons}>
-                  {activeStep !== 0 && (
-                    <Button onClick={handleBack} className={classes.button}>
-                      Back
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
-                </div>
-              </React.Fragment>
-            )}
-          </React.Fragment>
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField onChange={handleChange}
+                required
+                id="fecha"
+                name="fecha"
+                label="Ingresar la fecha"
+                value={fecha}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl className={classes.formControl}>
+                <InputLabel>Tipo</InputLabel>
+                <Select
+                  required
+                  id="tipo"
+                  name="tipo"
+                  label="Ingresar el tipo"
+                  value={tipo}
+                  onChange={handleChange}>
+                  <MenuItem value={'Ingreso'}>Ingreso</MenuItem>
+                  <MenuItem value={'Egreso'} >Egreso</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Button className={classes.button} variant="contained" color="primary"  required onClick={() => { setValores() }}>Cancelar</Button>
+            <Button className={classes.button} variant="contained" color="primary" required onClick={() => { handleSubmit() }}>Confirmar</Button>
+          </Grid>
         </Paper>
       </main>
     </React.Fragment>

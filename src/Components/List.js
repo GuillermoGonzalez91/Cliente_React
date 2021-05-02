@@ -17,6 +17,9 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Grid from '@material-ui/core/Grid';
 import TableHead from '@material-ui/core/TableHead';
 import { withStyles} from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 
 import {useState} from 'react';
@@ -26,8 +29,8 @@ import {useState} from 'react';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.black,
   },
   body: {
     fontSize: 14,
@@ -127,6 +130,7 @@ export default function CustomPaginationActionsTable({transaction, setTransactio
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [id, setId] = useState();
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, transactions.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -143,7 +147,7 @@ export default function CustomPaginationActionsTable({transaction, setTransactio
     const requestInit = {
         method: 'DELETE'
     }
-    fetch('http://localhost:9000/api' + id, requestInit)
+    fetch('http://localhost:9000/api/' + id, requestInit)
     .then(res => res.text())
     .then(res => console.log(res))
 
@@ -189,12 +193,14 @@ const handleUpdate = id => {
 <TableContainer>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="custom pagination table">
-      <TableHead>
+      <TableHead color = "primary">
           <TableRow>
-            <StyledTableCell>Concepto</StyledTableCell>
+            <StyledTableCell >Concepto</StyledTableCell>
             <StyledTableCell align="center">Monto</StyledTableCell>
-            <StyledTableCell align="center">Fecha</StyledTableCell>
-            <StyledTableCell align="center">Tipo</StyledTableCell>
+            <StyledTableCell  align="center">Fecha</StyledTableCell>
+            <StyledTableCell  align="center">Tipo</StyledTableCell>
+            <StyledTableCell align="center"></StyledTableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
@@ -214,7 +220,18 @@ const handleUpdate = id => {
               </TableCell>
               <TableCell style={{ width: 160 }} align="center">
                 {transaction.Tipo}
+               
+               
+               
               </TableCell>
+                <TableCell style={{ width: 160 }} align="center">
+                   <IconButton aria-label="delete" className={classes.margin}>
+                  <DeleteIcon  onClick={() => handleDelete(transaction.Id)}fontSize="small" />
+                </IconButton>
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+                </TableCell>
             </TableRow>
           ))}
 

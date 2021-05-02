@@ -6,9 +6,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 
-
-
-
 const useStyles = makeStyles((theme) => ({
   listItem: {
     padding: theme.spacing(1, 0),
@@ -21,11 +18,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function Resume({transaction}) {
   const classes = useStyles();
-
-
-
 
   return (
     <React.Fragment>
