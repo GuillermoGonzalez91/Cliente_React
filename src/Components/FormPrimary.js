@@ -63,27 +63,49 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FormTransaction({ transaction, setTransaction, setListUpdated }) {
 
+
   const handleSubmit = () => {
-    //consulta
-    const requestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(transaction)
-    }
-    fetch('http://localhost:9000/api', requestInit)
-      .then(res => res.text())
-      .then(res => console.log(res))
-
-    //reiniciando state de la transaccion
-    setTransaction({
-      concepto: '',
-      monto: 0,
-      fecha: Date,
-      tipo: ''
+        swal({
+      title: "Are you sure?",
+      text: "Are you sure you want to save the file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
     })
+    .then((willDelete) => {
+      if (willDelete) {
 
-    setListUpdated(true);
-  }
+        const requestInit = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(transaction)
+        }
+        fetch('http://localhost:9000/api', requestInit)
+          .then(res => res.text())
+          .then(res => console.log(res))
+    
+        //reiniciando state de la transaccion
+        setTransaction({
+          concepto: '',
+          monto: 0,
+          fecha: Date,
+          tipo: ''
+        })
+    
+        setListUpdated(true);
+      
+    
+
+      swal("Your file has been save!", {
+          icon: "success",
+        });
+      } 
+      else {
+        swal("Your file is not save!");
+      }
+    });
+}
+
 
 
   const handleChange = e => {
