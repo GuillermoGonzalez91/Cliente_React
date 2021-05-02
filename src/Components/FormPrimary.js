@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import swal from 'sweetalert';
 
 
 
@@ -109,7 +110,7 @@ export default function FormTransaction({ transaction, setTransaction, setListUp
                 required
                 id="conncepto"
                 name="concepto"
-                label="Ingresar el conceptp"
+                label="Ingresar el concepto"
                 value={concepto}
               />
             </Grid>

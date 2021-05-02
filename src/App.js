@@ -98,7 +98,7 @@ function App() {
       case 1:
        return(
          <Grid  className={classes.paper2}>
-                  <Form transaction={transaction} setTransaction={setTransaction} setListUpdated={setListUpdated} />
+                  <Form transaction={transaction} setTransaction={setTransaction} transactions={transactions} setListUpdated={setListUpdated}  />
          </Grid>
        )
        default: 

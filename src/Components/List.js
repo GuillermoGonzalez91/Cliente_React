@@ -19,10 +19,12 @@ import TableHead from '@material-ui/core/TableHead';
 import { withStyles} from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import swal from '@sweetalert/with-react';
+import TextField from '@material-ui/core/TextField';
 
 
 import {useState} from 'react';
+import { Fragment } from 'react';
 
 
 
@@ -123,14 +125,17 @@ const useStyles2 = makeStyles({
 
 
 
-export default function CustomPaginationActionsTable({transaction, setTransactions, transactions, setListUpdated}) {
+export default function CustomPaginationActionsTable({transaction, setTransaction, transactions, setListUpdated}) {
+
+
 
   const classes = useStyles2();
+
+
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [id, setId] = useState();
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, transactions.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -142,54 +147,127 @@ export default function CustomPaginationActionsTable({transaction, setTransactio
     setPage(0);
   };
 
-
-  const handleDelete = id => {
-    const requestInit = {
-        method: 'DELETE'
-    }
-    fetch('http://localhost:9000/api/' + id, requestInit)
-    .then(res => res.text())
-    .then(res => console.log(res))
-
-    setListUpdated(true)
-}
-
-let{concepto, monto, fecha, tipo} = transaction
-const handleUpdate = id => {
-   // fecha = parseInt(fecha, 10)
-    //validación de los datos
-    if (concepto === '' || monto <=0|| fecha === Date || tipo ==='') {
-        alert('Todos los campos son obligatorios')
-        return
-    }
-    const requestInit = {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(transaction)
-    }
-    fetch('http://localhost:9000/api' + id, requestInit)
-    .then(res => res.text())
-    .then(res => console.log(res))
-
-    //reiniciando state de las
-    setTransactions({
-        concepto: '',
-        monto: 0,
-        fecha: Date,
-        tipo: ''
+  
+  //METODO PARA GAURDAR EN UN STATE LOS VVALORES INGRESADOS
+  const handleChange = e => {
+    setTransaction({
+      transaction,
+      [e.target.name]: e.target.value
     })
+  };
+  let { concepto, monto, fecha, tipo } = transaction
 
-    setListUpdated(true)
+
+
+//METODO PARA BORRAR EL CAMPO SELECCIONADO
+  const handleDelete = id => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        const requestInit = {
+          method: 'DELETE'
+      }
+      fetch('http://localhost:9000/api/' + id, requestInit)
+      .then(res => res.text())
+      .then(res => console.log(res))
+      setListUpdated(true)
+      swal("Your file has been deleted!", {
+          icon: "success",
+        });
+      } 
+      else {
+        swal("Your file is safe!");
+      }
+    });
+}
+
+
+//CONSULTA PUT PARA EDITAR
+const handleUpdate = (id) => {
+    const requestInit = {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(transaction)
+  }
+  fetch('http://localhost:9000/api/' + id, requestInit)
+  .then(res => res.text())
+  .then(res => console.log(res))
+  setListUpdated(true)
+    }
+
+
+
+
+// FORMULARIO PARA EDITAR EL CAMPO
+const formUpdate = (Id) => {
+  swal(<Grid>
+Modificar movimiento
+      
+      <Grid container spacing={3}>
+           <Grid item xs={12} sm={6}>
+             Ingresar el concepto
+             <TextField onChange={handleChange}
+             required
+               id="concepto"
+               name="concepto"
+               value={concepto}
+             />
+           </Grid>
+           <Grid item xs={12} sm={6}>
+             Ingresar el monto
+             <TextField onChange={handleChange}
+             required
+               id="monto"
+               name="monto"
+               value={monto}
+             />
+           </Grid>
+           <Grid item xs={12} sm={6}>
+             Ingresar la fecha
+             <TextField onChange={handleChange}
+             required
+               id="fecha"
+               name="fecha"
+               value={fecha}
+             />
+           </Grid>
+           <Grid item xs={12} sm={6}>
+             Tipo de Transaccion
+             <TextField onChange={handleChange}
+             required
+               id="fecha"
+               name="tipo"
+               value={tipo}
+             />
+           </Grid>
+           </Grid>
+  </Grid>
+  , {
+    buttons: true,
+    dangerMode: true})
+  .then((willUpdate) => {
+    if (willUpdate) {
+    handleUpdate(transaction.Id)
+   swal("Your file has been update!", {
+    icon: "success",
+   });
+    } 
+    else {
+      swal("Your file is not update!");
+    }
+  });
 }
 
 
 
-  return (
-
+return (
 <Grid  className={classes.layout}>
-
-
-
 <TableContainer>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="custom pagination table">
@@ -229,7 +307,7 @@ const handleUpdate = id => {
                   <DeleteIcon  onClick={() => handleDelete(transaction.Id)}fontSize="small" />
                 </IconButton>
                 <IconButton>
-                  <EditIcon />
+                  <EditIcon onClick={() => formUpdate(transaction.Id)}fontSize="small" />
                 </IconButton>
                 </TableCell>
             </TableRow>
@@ -265,6 +343,16 @@ const handleUpdate = id => {
 </Grid>
   );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
