@@ -1,3 +1,22 @@
+# Aplicacion de finanzas hecha con React. 
+
+Permite el ingreso de datos a traves de un formulario, movimientos de ingreso y egreso de dinero.
+
+Los datos ingresados se muestran y actualizan automaticamente, separado por tipo de movimiento en el componente CardResume
+Tambien se muestran en forma de graficos en el commponente Charts.
+
+El componente List muestra los todos los movimientos ingresados, en paginas de 10 items
+
+Los movimientos ingresados se pueden eliminar de la lista
+
+*El componente Navbar no posee funcionalidad.
+*Hay un error en el componente list que no permite modificar o editar un item seleccionado.
+*La app no es responsiva al 100 %, exiten algunos problemas en celulares o en tamaños muy pequeños en pc de escritorio.
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
