@@ -9,6 +9,8 @@ El componente List muestra los todos los movimientos ingresados, en paginas de 1
 
 Los movimientos ingresados se pueden eliminar de la lista
 
+Se utilizo Material ui para realizar los estilos.
+
 *El componente Navbar no posee funcionalidad.
 *Hay un error en el componente list que no permite modificar o editar un item seleccionado.
 *La app no es responsiva al 100 %, exiten algunos problemas en celulares o en tamaños muy pequeños en pc de escritorio.
